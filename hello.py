@@ -1,8 +1,12 @@
+from colorama import Fore, Back, Style, init  # 1. Added 'Back' here
 import random
 import platform 
 import psutil 
 
-# Static system info (runs once)
+# 2. Initialize colorama IMMEDIATELY so it's ready to go
+init(autoreset=True)
+
+# 3. Gather your static data
 secret_pin = str(random.randint(1000, 9999))
 machine_type = platform.machine()
 os_name = platform.system()
@@ -14,19 +18,22 @@ print(f"Architecture: {machine_type} | OS: {os_name} {version} | Session PIN: {s
 print("-----------------------------\n")
 
 while True:
-    # Real-time RAM check (runs every time the loop repeats)
     ram_usage = psutil.virtual_memory().percent
-    
     print(f"[Current RAM Usage: {ram_usage}%]")
+    
     user_name = input("Enter your name (or type 'exit' to quit): ")
 
     if user_name.lower() == "exit":
-        print("Goodbye, Master. Powering down.")
+        print(Fore.RED + Style.BRIGHT + "Goodbye, Master. Powering down.")
         break 
+
     if user_name == secret_pin:
-        print("SECRET ADMIN ACCESS GRANTED. Accessing core files...")
+        # Now 'Back' will work because we added it to the import at the top!
+        print(Fore.GREEN + Back.BLACK + "--- SECRET ADMIN ACCESS GRANTED ---")
 
     if user_name == "Big-John":
-        print(f"Welcome back, Master {user_name}. Your iMac is ready.")
-    else:
-        print(f"Hello {user_name}, you are logged in as a guest.")
+        print(Fore.CYAN + f"Welcome back, Master {user_name}.")
+    
+    # Optional: Add an 'else' for guests if you want!
+    elif user_name.lower() != "exit" and user_name != secret_pin:
+        print(Fore.YELLOW + f"Hello {user_name}, you are logged in as a guest.")
